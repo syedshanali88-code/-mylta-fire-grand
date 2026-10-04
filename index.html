@@ -1,190 +1,247 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>MYLTA - VOICE CHAT 35 MIN</title>
+<title>MYLTA FIRE GRAND - HD OCEAN PALACE</title>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;overflow:hidden;font-family:Arial;color:#fff}
-#lobby{position:fixed;left:0;top:0;width:100vw;height:100vh;background:linear-gradient(#0f1a0f,#1e3d1e);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-#ui{position:fixed;top:0;left:0;width:100%;height:52px;background:rgba(0,0,0,0.95);display:flex;justify-content:space-between;align-items:center;padding:0 8px;z-index:300;border-bottom:3px solid #ffcc00;font-weight:bold;font-size:11px;display:none}
-#game{position:relative;width:100vw;height:100vh;overflow:hidden;background:linear-gradient(#6ab0ff,#7ab369)}
-#map{position:absolute;width:8000px;height:8000px;background:#7ab369;left:-1000px;top:-1000px;border:8px solid #ffcc00}
-#blueZone{position:absolute;border:6px dashed #0066ff;background:rgba(0,102,255,0.12);border-radius:50%;z-index:2;transition:all 12s linear}
-.house{position:absolute;background:#d2b48c;border:4px solid #5a3510;z-index:5}
-#plane{position:absolute;width:320px;height:70px;background:#eee;border:4px solid #000;border-radius:20px;z-index:100;display:flex;align-items:center;justify-content:center;color:#000;font-weight:bold;left:-400px;top:800px}
-.char{position:absolute;width:50px;height:70px;z-index:20}
-.head{width:26px;height:26px;background:#ffdbac;border-radius:50%;border:2px solid #000;margin:0 auto}
-.body{width:34px;height:30px;background:#555;border:2px solid #000;margin:2px auto 0;border-radius:5px}
-.legs{width:34px;display:flex;justify-content:space-between;margin:0 auto}
-.leg{width:13px;height:18px;background:#444;border:2px solid #000}
-.nameTag{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);color:#fff;font-size:9px;padding:2px 6px;border-radius:10px;white-space:nowrap;border:1px solid #ffcc00}
-.para{position:absolute;top:-50px;left:-10px;font-size:48px;display:none}
-#playerWrap{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:50;display:none}
-#joystick{width:135px;height:135px;background:rgba(0,0,0,0.35);border-radius:50%;position:fixed;bottom:20px;left:15px;z-index:300;border:2px solid #fff3;display:none}
-#stick{width:58px;height:58px;background:#ffcc00;border-radius:50%;position:absolute;left:38px;top:38px}
-#fireBtn{width:90px;height:90px;background:radial-gradient(#ff5555,#cc0000);border-radius:50%;position:fixed;bottom:80px;right:15px;z-index:300;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid #fff;display:none}
-#voiceBtn{width:90px;height:90px;background:radial-gradient(#55ff55,#00aa00);border-radius:50%;position:fixed;bottom:180px;right:15px;z-index:310;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid #fff;font-size:12px;text-align:center;flex-direction:column;display:none}
-#jumpBtn{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:140px;height:140px;background:#ffcc00;border-radius:50%;z-index:400;display:none;align-items:center;justify-content:center;color:#000;font-weight:bold;font-size:19px;border:5px solid #fff}
-#status{position:fixed;top:62px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);padding:10px 20px;border-radius:20px;z-index:400;border:2px solid #ffcc00;display:none;text-align:center}
-#voiceList{position:fixed;top:60px;left:10px;background:rgba(0,0,0,0.7);padding:8px;border-radius:10px;z-index:310;font-size:10px;display:none}
-#winScreen{position:fixed;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, sans-serif}
+body{background:#000;overflow:hidden;touch-action:none;color:#fff}
+.screen{position:fixed;inset:0;z-index:500;display:flex;flex-direction:column}
+#lobby{background:radial-gradient(ellipse at center,#2a3a4a 0%,#0a141e 100%);display:flex}
+.lobby-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1280') center/cover;opacity:0.3}
+.top-ui{display:flex;justify-content:space-between;padding:10px 15px;z-index:2;font-size:12px;font-weight:bold}
+.left-icons{display:flex;flex-direction:column;gap:10px;position:absolute;left:10px;top:80px;z-index:2}
+.icon{width:50px;height:50px;background:rgba(0,0,0,0.6);border:1px solid #555;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.center-chars{flex:1;display:flex;align-items:center;justify-content:center;gap:20px;z-index:2}
+.char{width:110px;height:280px;background:linear-gradient(#fff,#888);border-radius:10px;position:relative;border:2px solid #ffcc00;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px}
+.char::before{content:'🔫';font-size:40px;position:absolute;top:40px}
+.bottom-ui{position:absolute;bottom:0;left:0;width:100%;height:140px;background:linear-gradient(transparent,rgba(0,0,0,0.9));z-index:2;display:flex;align-items:flex-end;padding:10px;gap:10px}
+.timer-box{background:rgba(0,0,0,0.8);padding:10px 15px;border-radius:5px;border:1px solid #444}
+#startBtn{padding:15px 50px;background:linear-gradient(#ffeb3b,#ff9800);border:none;border-radius:5px;font-weight:bold;font-size:22px;color:#000;cursor:pointer;box-shadow:0 0 20px #ff9800}
+.team-cards{display:flex;gap:8px;margin-left:20px}
+.tcard{background:rgba(0,0,0,0.7);border:1px solid #555;padding:5px 10px;border-radius:4px;font-size:11px;min-width:100px}
+.tcard b{color:#00ff88}
+#loading{display:none;background:linear-gradient(#001a33,#003366);align-items:center;justify-content:center;text-align:center}
+#loading h1{font-size:60px;letter-spacing:10px;opacity:0.2}
+.whale{position:absolute;top:20%;right:15%;font-size:120px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+#gameUI{display:none;pointer-events:none}
+.hud-top{position:fixed;top:0;left:0;width:100%;display:flex;justify-content:space-between;padding:5px 10px;background:rgba(0,0,0,0.4);font-size:11px}
+#killFeed{position:fixed;left:10px;bottom:120px;font-size:11px;line-height:16px}
+.controls{position:fixed;inset:0;pointer-events:none}
+.joy{position:absolute;left:15px;bottom:15px;width:120px;height:120px;background:rgba(255,255,255,0.1);border-radius:50%;border:2px solid rgba(255,255,255,0.2);pointer-events:auto}
+.stick{position:absolute;left:35px;top:35px;width:50px;height:50px;background:rgba(255,255,255,0.5);border-radius:50%}
+.btn{position:absolute;width:70px;height:70px;background:rgba(0,0,0,0.5);border:2px solid rgba(255,255,255,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;pointer-events:auto;font-size:20px}
+#fire{right:15px;bottom:80px}
+#scope{right:100px;bottom:20px}
+#jump{right:15px;bottom:170px}
+#mapBtn{position:fixed;right:10px;top:60px;width:80px;height:80px;background:rgba(0,0,0,0.6);border:1px solid #fff}
 </style>
 </head>
 <body>
 
-<div id="lobby">
-<div style="font-size:80px">🪖</div>
-<h1 style="color:#ffcc00;font-size:36px">MYLTA FIRE GRAND</h1>
-<p>🎤 VOICE CHAT | 35 MIN | 12 SQUAD</p>
-<p style="font-size:12px;opacity:0.7;margin-top:8px">دوستوں کے ساتھ بات کرنے کے لیے MIC Allow کرنا</p>
-<button onclick="startPlane()" style="padding:18px 60px;background:linear-gradient(#ffcc00,#ff9900);color:#000;font-weight:bold;font-size:20px;border:none;border-radius:30px;margin-top:18px">▶ START WITH VOICE</button>
+<!-- LOBBY LIKE YOUR VIDEO -->
+<div id="lobby" class="screen">
+<div class="lobby-bg"></div>
+<div class="top-ui">
+<div>Markhor1213 🔥 CRAZY CHICKEN</div>
+<div>👑 PRIME | G 1280 | BP 5+ | UC +</div>
+</div>
+<div class="left-icons"><div class="icon">3/3</div><div class="icon">👤</div><div class="icon">💀</div><div class="icon">📦</div></div>
+<div class="center-chars">
+<div class="char"><span>Markhor1213</span></div>
+<div class="char" style="height:260px;background:linear-gradient(#222,#000)"><span>sycxxxx</span></div>
+<div class="char" style="height:265px;background:linear-gradient(#c9a86a,#8a6a3a)"><span>HassanAli_472</span></div>
+</div>
+<div class="bottom-ui">
+<div class="timer-box">
+<div style="font-size:24px">00:09 ⏱</div>
+<div style="color:#00ff88">Team 4/4 👥👥👥👥</div>
+<div style="font-size:10px;opacity:0.7">Classic - Ranked / MYLTA FIRE GRAND</div>
+<button id="startBtn" onclick="goLoading()">START</button>
+<div style="font-size:9px;margin-top:5px;opacity:0.5">Europe HD 5.3.0.2345</div>
+</div>
+<div class="team-cards">
+<div class="tcard"><b>READY</b><br>👑 Markhor1213</div>
+<div class="tcard"><b>READY</b><br>👑 HassanAli_472</div>
+<div class="tcard"><b>READY</b><br>👑 NEXTYU</div>
+</div>
+<div style="margin-left:auto;display:flex;gap:15px;font-size:12px;opacity:0.8"><span>MAIL</span><span>MAP • MYLTA</span><span>S30/SEASON</span><span>WORKSHOP</span><span>INVENTORY</span></div>
+</div>
 </div>
 
-<div id="ui"><div>MYLTA VOICE</div><div id="zoneTimer">ZONE: 8000m</div><div id="killCount">ALIVE: 48</div></div>
-<div id="status"></div>
-<div id="voiceList">🎤 VOICE SQUAD<br>SHAN: <span id="myMicStatus">OFF</span><br>BOT1: 🔇<br>BOT2: 🔇<br>BOT3: 🔇</div>
-<div id="jumpBtn">JUMP 🪂</div>
+<!-- LOADING LIKE WHALE -->
+<div id="loading" class="screen">
+<div class="whale">🐋</div>
+<div style="position:absolute;top:15%;left:10%;font-size:80px">🤿</div>
+<h1>MYLTA</h1>
+<p style="margin-top:20px">Ocean Palace is coming...</p>
+<div style="width:80%;height:4px;background:#333;margin-top:30px;position:relative"><div id="loadBar" style="width:0%;height:100%;background:#00ccff;transition:width 0.2s"></div></div>
+<p id="loadText" style="margin-top:10px;font-size:12px">50% - Loading...</p>
+<p style="position:absolute;bottom:20px;right:20px;font-size:10px;opacity:0.5">Ban Pan Security 3.0 is scanning</p>
+</div>
 
-<div id="game"><div id="map"><div id="blueZone" style="left:0;top:0;width:8000px;height:8000px"></div><div id="plane">MYLTA AIRLINES ✈️</div></div></div>
-<div id="playerWrap"><div class="char"><div class="para" id="myPara">🪂</div><div class="nameTag" style="background:#0066ff">SHAN 👑 🎤</div><div class="head"></div><div class="body" style="background:#0066ff"></div><div class="legs"><div class="leg"></div><div class="leg"></div></div></div></div>
-<div id="joystick"><div id="stick"></div></div>
-<div id="fireBtn">FIRE</div>
-<div id="voiceBtn" onclick="toggleVoice()"><span style="font-size:28px">🎤</span><span id="voiceTxt">MIC OFF</span></div>
-<div id="winScreen"><h1 style="color:#ffcc00;font-size:42px">CHICKEN DINNER! 🍗</h1><p id="winStats"></p><button onclick="location.reload()" style="padding:15px 40px;background:#ffcc00;color:#000;font-weight:bold;border:none;border-radius:30px;font-size:18px;margin-top:20px">PLAY AGAIN</button></div>
+<!-- GAME UI -->
+<div id="gameUI">
+<div class="hud-top">
+<div id="hudLeft">Remaining 100 | Eliminations 0</div>
+<div id="hudCenter">Match starts in <span id="matchTimer">20</span> seconds</div>
+<div>🗺️ Mylta Power</div>
+</div>
+<div id="killFeed"></div>
+<div id="mapBtn">MAP</div>
+<div class="controls">
+<div class="joy" id="joy"><div class="stick" id="stick"></div></div>
+<div class="btn" id="fire">🔫</div>
+<div class="btn" id="scope">🔍</div>
+<div class="btn" id="jump">⬆️</div>
+</div>
+<div style="position:fixed;bottom:5px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);padding:5px 15px;border-radius:5px;font-size:12px">Auto 40/60 | Health 100</div>
+</div>
 
-<script>
-let map=document.getElementById('map'),mx=-1000,my=-1000,jx=0,jy=0,kills=0,totalBots=48,gameTime=0;
-let plane=document.getElementById('plane'),planeX=-400,inPlane=true,landed=false;
-let joy=document.getElementById('joystick'),stick=document.getElementById('stick');
-let blue=document.getElementById('blueZone'),zoneSize=8000,zoneX=0,zoneY=0,zoneStarted=false;
-let micOn=false,localStream=null;
+<script type="module">
+import * as THREE from 'three';
+let scene,camera,renderer,player,mantaPlane,keys={},jx=0,jy=0,state='lobby';
+let loadProgress=0, matchTime=20, players=[], oceanPalace;
 
-function startPlane(){
+window.goLoading=()=>{
  document.getElementById('lobby').style.display='none';
- document.getElementById('ui').style.display='flex';
- document.getElementById('status').style.display='block';
- document.getElementById('status').innerText='🛩️ جہاز میں 12 سکواڈ | MIC دبا کر دوستوں سے بات کرو';
- document.getElementById('jumpBtn').style.display='flex';
- document.getElementById('playerWrap').style.display='block';
- document.getElementById('voiceBtn').style.display='flex';
- document.getElementById('voiceList').style.display='block';
- planeLoop();
-}
-function planeLoop(){
- if(!inPlane) return;
- planeX+=6; plane.style.left=planeX+'px';
- if(planeX<8500) requestAnimationFrame(planeLoop);
- else { inPlane=false; if(!landed) autoJump(); }
-}
-function autoJump(){ document.getElementById('jumpBtn').click(); }
-
-async function toggleVoice(){
- let txt=document.getElementById('voiceTxt'), stat=document.getElementById('myMicStatus'), btn=document.getElementById('voiceBtn');
- if(!micOn){
-  try{
-   localStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
-   micOn=true; txt.innerText='MIC ON'; stat.innerText='ON 🔊'; stat.style.color='#0f0';
-   btn.style.background='radial-gradient(#ff5555,#cc0000)';
-   document.getElementById('status').style.display='block';
-   document.getElementById('status').innerText='✅ وائس آن ہے - آپ کا سکواڈ آپ کو سن رہا ہے! 🎤';
-   // آواز کی لہر دکھانے کے لیے
-   let audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-   let analyser=audioCtx.createAnalyser(); audioCtx.createMediaStreamSource(localStream).connect(analyser);
-   setTimeout(()=>{document.getElementById('status').style.display='none'},3500);
-  }catch(e){
-   alert('بھائی مائک کی اجازت دیں! Allow دبائیں تاکہ دوست آپ کو سن سکیں');
-  }
- } else {
-  if(localStream) localStream.getTracks().forEach(t=>t.stop());
-  micOn=false; txt.innerText='MIC OFF'; stat.innerText='OFF'; stat.style.color='#fff';
-  btn.style.background='radial-gradient(#55ff55,#00aa00)';
-  document.getElementById('status').style.display='block';
-  document.getElementById('status').innerText='🔇 وائس بند';
-  setTimeout(()=>document.getElementById('status').style.display='none',2000);
- }
+ document.getElementById('loading').style.display='flex';
+ let iv=setInterval(()=>{
+  loadProgress+=2; document.getElementById('loadBar').style.width=loadProgress+'%';
+  document.getElementById('loadText').innerText=loadProgress+'% - Loading Ocean Palace';
+  if(loadProgress>=100){clearInterval(iv); startSpawnIsland();}
+ },60);
 }
 
-document.getElementById('jumpBtn').addEventListener('click',()=>{
- inPlane=false; document.getElementById('jumpBtn').style.display='none';
- document.getElementById('myPara').style.display='block';
- let h=0; let fall=setInterval(()=>{
-  h+=4; document.getElementById('playerWrap').style.top=(50+h/12)+'%';
-  if(h>120){ clearInterval(fall); landed=true;
-   document.getElementById('myPara').style.display='none';
-   document.getElementById('status').style.display='block';
-   document.getElementById('status').innerText='✅ لینڈنگ! MIC آن کرو اور سکواڈ سے بات کرو 🎤';
-   document.getElementById('joystick').style.display='block';
-   document.getElementById('fireBtn').style.display='flex';
-   document.getElementById('voiceBtn').style.display='flex';
-   setTimeout(()=>document.getElementById('status').style.display='none',4000);
-   spawnSquadBots(); startGameTimer();
-  }
- },70);
-});
-
-let bots=[];
-function spawnSquadBots(){
- let spots=[{x:500,y:500},{x:3000,y:800},{x:6000,y:500},{x:500,y:3000},{x:3500,y:3500},{x:6500,y:3000},{x:800,y:6000},{x:3000,y:6000},{x:6000,y:6000},{x:1500,y:1500},{x:5000,y:1500},{x:5000,y:5000}];
- spots.forEach((s,idx)=>{
-  for(let j=0;j<4;j++){
-   let b=document.createElement('div');b.className='char bot';
-   b.innerHTML=`<div class="para">🪂</div><div class="nameTag">S${idx+1}-BOT${j+1} 🎤</div><div class="head"></div><div class="body"></div><div class="legs"><div class="leg"></div><div class="leg"></div></div>`;
-   b.style.left=(s.x+Math.random()*350)+'px'; b.style.top=(s.y+Math.random()*250)+'px';
-   b.alive=true; map.appendChild(b); bots.push(b);
-   let para=b.querySelector('.para'); para.style.display='block'; setTimeout(()=>para.style.display='none',2500);
-  }
- });
- for(let i=0;i<20;i++){let h=document.createElement('div');h.className='house';h.style.left=(400+Math.random()*7000)+'px';h.style.top=(400+Math.random()*7000)+'px';h.style.width='300px';h.style.height='250px';map.appendChild(h)}
-}
-function startGameTimer(){
- setInterval(()=>{
-  gameTime++; let m=Math.floor(gameTime/60); let s=gameTime%60;
-  document.getElementById('zoneTimer').innerText=`ZONE: ${zoneSize}m | ${m}:${s<10?'0'+s:s} / 35:00`;
+function startSpawnIsland(){
+ document.getElementById('loading').style.display='none';
+ document.getElementById('gameUI').style.display='block';
+ state='spawn';
+ init3DSpawn();
+ let ti=setInterval(()=>{
+  matchTime--; document.getElementById('matchTimer').innerText=matchTime;
+  if(matchTime<=0){clearInterval(ti); startFlight();}
  },1000);
 }
-setInterval(()=>{
- if(!landed) return;
- zoneSize-=600; if(zoneSize<600) zoneSize=600;
- zoneX=(8000-zoneSize)/2; zoneY=(8000-zoneSize)/2;
- blue.style.left=zoneX+'px'; blue.style.top=zoneY+'px'; blue.style.width=zoneSize+'px'; blue.style.height=zoneSize+'px';
-},180000);
 
-setInterval(()=>{
- if(!landed) return;
- let cx=zoneX+zoneSize/2, cy=zoneY+zoneSize/2;
- bots.forEach(b=>{
-  if(!b.alive) return;
-  let bx=parseFloat(b.style.left),by=parseFloat(b.style.top);
-  let out=bx<zoneX||bx>zoneX+zoneSize||by<zoneY||by>zoneY+zoneSize;
-  if(out){let ang=Math.atan2(cy-by,cx-bx); b.style.left=(bx+Math.cos(ang)*1)+'px'; b.style.top=(by+Math.sin(ang)*1)+'px';}
+function init3DSpawn(){
+ scene=new THREE.Scene(); scene.background=new THREE.Color(0x87a8c0); scene.fog=new THREE.Fog(0x87a8c0,80,400);
+ camera=new THREE.PerspectiveCamera(70,innerWidth/innerHeight,0.1,1000);
+ renderer=new THREE.WebGLRenderer({antialias:true}); renderer.setSize(innerWidth,innerHeight);
+ renderer.shadowMap.enabled=true; document.body.appendChild(renderer.domElement);
+ scene.add(new THREE.AmbientLight(0xffffff,0.8));
+ let sun=new THREE.DirectionalLight(0xffffff,1); sun.position.set(50,100,50); sun.castShadow=true; scene.add(sun);
+ // Spawn Island - ancient ruins like video
+ let ground=new THREE.Mesh(new THREE.PlaneGeometry(1000,1000), new THREE.MeshStandardMaterial({color:0x8a8a7a}));
+ ground.rotation.x=-Math.PI/2; ground.receiveShadow=true; scene.add(ground);
+ // Pillars
+ for(let i=0;i<12;i++){
+  let p=new THREE.Mesh(new THREE.CylinderGeometry(2,3,15,8), new THREE.MeshStandardMaterial({color:0x9a9a8a}));
+  p.position.set((Math.random()-0.5)*200,7.5,(Math.random()-0.5)*200); p.castShadow=true; scene.add(p);
+  let top=new THREE.Mesh(new THREE.BoxGeometry(6,2,6), new THREE.MeshStandardMaterial({color:0x8a8a8a}));
+  top.position.set(p.position.x,16,p.position.z); scene.add(top);
+ }
+ // Players running like video
+ for(let i=0;i<15;i++){
+  let pl=new THREE.Mesh(new THREE.CapsuleGeometry(0.7,1.3,4,8), new THREE.MeshStandardMaterial({color:Math.random()>0.5?0xffffff:0x222222}));
+  pl.position.set((Math.random()-0.5)*80,1,(Math.random()-0.5)*80); scene.add(pl); players.push(pl);
+ }
+ player=new THREE.Mesh(new THREE.CapsuleGeometry(0.8,1.5,4,12), new THREE.MeshStandardMaterial({color:0xffcc00}));
+ player.position.set(0,1,20); scene.add(player);
+ camera.position.set(0,8,15); camera.lookAt(player.position);
+ animate();
+ setupJoy();
+}
+
+function startFlight(){
+ document.getElementById('hudCenter').innerHTML='Following syxxxxx | Players in Cabin 100';
+ state='flight';
+ // Create giant manta + plane
+ mantaPlane=new THREE.Group();
+ let planeBody=new THREE.Mesh(new THREE.BoxGeometry(6,2,30), new THREE.MeshStandardMaterial({color:0x333333}));
+ mantaPlane.add(planeBody);
+ let mantaWing=new THREE.Mesh(new THREE.CylinderGeometry(15,5,2,3), new THREE.MeshStandardMaterial({color:0x0099ff,transparent:true,opacity:0.8}));
+ mantaWing.rotation.z=Math.PI/2; mantaWing.position.set(0,5,0); mantaPlane.add(mantaWing);
+ mantaPlane.position.set(0,150,0); scene.add(mantaPlane);
+ player.position.set(0,152,0); mantaPlane.add(player);
+ addKill('Ocean Palace discovered!');
+}
+
+function jumpFromPlane(){
+ state='falling';
+ scene.remove(mantaPlane); scene.add(player);
+ player.position.set(0,120,-50);
+ addKill('You are in top 30');
+}
+
+function addKill(t){
+ let f=document.getElementById('killFeed'); let d=document.createElement('div'); d.innerText=t; d.style.color='#00ffcc';
+ f.appendChild(d); setTimeout(()=>d.remove(),4000);
+}
+
+function setupJoy(){
+ let joy=document.getElementById('joy'), stick=document.getElementById('stick');
+ joy.addEventListener('touchmove',e=>{
+  let r=joy.getBoundingClientRect(), t=e.touches[0]; let dx=t.clientX-(r.left+60), dy=t.clientY-(r.top+60);
+  let dist=Math.min(45,Math.hypot(dx,dy)), ang=Math.atan2(dy,dx); jx=Math.cos(ang)*dist/45; jy=Math.sin(ang)*dist/45;
+  stick.style.left=35+Math.cos(ang)*dist+'px'; stick.style.top=35+Math.sin(ang)*dist+'px';
+  if(state==='flight' && dist>20) jumpFromPlane();
  });
-},90);
+ joy.addEventListener('touchend',()=>{jx=0;jy=0;stick.style.left='35px';stick.style.top='35px';});
+ document.getElementById('jump').addEventListener('touchstart',()=>{if(state==='flight') jumpFromPlane();});
+ document.getElementById('fire').addEventListener('touchstart',()=>{
+  addKill('Markhor1213 killed Enemy with M416');
+  // muzzle flash
+  let flash=new THREE.Mesh(new THREE.SphereGeometry(0.5,6,6), new THREE.MeshBasicMaterial({color:0xffff00}));
+  flash.position.copy(player.position); flash.position.y+=1; scene.add(flash); setTimeout(()=>scene.remove(flash),80);
+ });
+ window.addEventListener('keydown',e=>{
+  keys[e.key.toLowerCase()]=true; if(e.key===' ') jumpFromPlane();
+ });
+}
 
-document.getElementById('fireBtn').addEventListener('touchstart',()=>{
- let bl=document.createElement('div');bl.style.position='absolute';bl.style.width='12px';bl.style.height='12px';bl.style.background='yellow';bl.style.borderRadius='50%';bl.style.zIndex=30;
- let sx=-mx+window.innerWidth/2, sy=-my+window.innerHeight/2;
- bl.style.left=sx+'px'; bl.style.top=sy+'px'; map.appendChild(bl);
- let by=sy;
- let id=setInterval(()=>{
-  by-=20; bl.style.top=by+'px';
-  bots.forEach(b=>{
-   if(!b.alive) return;
-   let d=Math.hypot(sx-parseFloat(b.style.left), by-parseFloat(b.style.top));
-   if(d<45){b.alive=false;b.style.opacity='0.2';b.style.transform='rotate(90deg)';kills++;document.getElementById('killCount').innerText=`ALIVE: ${totalBots-kills} | KILL: ${kills}`;bl.remove();clearInterval(id);
-   if(kills>=totalBots){document.getElementById('winScreen').style.display='flex';document.getElementById('winStats').innerText=`35 منٹ میں ${kills} مارے!`;}}
-  });
-  if(by<sy-1000){bl.remove();clearInterval(id)}
- },16);
-});
-joy.addEventListener('touchmove',e=>{
- let r=joy.getBoundingClientRect(),t=e.touches[0],dx=t.clientX-(r.left+67),dy=t.clientY-(r.top+67);
- let d=Math.min(50,Math.hypot(dx,dy)),a=Math.atan2(dy,dx);jx=Math.cos(a)*d/50;jy=Math.sin(a)*d/50;
- stick.style.left=38+Math.cos(a)*d+'px';stick.style.top=38+Math.sin(a)*d+'px';
-});
-joy.addEventListener('touchend',()=>{jx=0;jy=0;stick.style.left='38px';stick.style.top='38px'});
-(function loop(){if(landed){mx-=jx*10;my-=jy*10;map.style.left=mx+'px';map.style.top=my+'px';}requestAnimationFrame(loop)})();
+function animate(){
+ requestAnimationFrame(animate);
+ if(!scene) return;
+ if(state==='spawn'){
+  players.forEach(p=>{p.position.x+= (Math.random()-0.5)*0.2; p.position.z+= (Math.random()-0.5)*0.2;});
+  player.position.x+=jx*0.5; player.position.z+=jy*0.5;
+  camera.position.lerp(new THREE.Vector3(player.position.x, player.position.y+8, player.position.z+15),0.08);
+  camera.lookAt(player.position);
+ }
+ if(state==='flight'){
+  mantaPlane.position.z-=0.8; mantaPlane.position.x+=Math.sin(Date.now()*0.0003)*0.3;
+  camera.position.lerp(new THREE.Vector3(mantaPlane.position.x, mantaPlane.position.y+15, mantaPlane.position.z+25),0.1);
+  camera.lookAt(mantaPlane.position);
+  if(mantaPlane.position.z<-200) jumpFromPlane();
+ }
+ if(state==='falling'){
+  player.position.y-=0.8; player.position.z-=jx*2; player.position.x+=jy*2;
+  if(player.position.y<2){ player.position.y=2; state='ground'; addKill('Ocean Palace - Loot M416'); createOceanPalace(); }
+  camera.position.lerp(new THREE.Vector3(player.position.x, player.position.y+6, player.position.z+10),0.1);
+  camera.lookAt(player.position);
+  document.getElementById('hudCenter').innerHTML=`Altitude ${Math.floor(player.position.y)}m | Speed ${Math.floor(80+Math.random()*40)} km/h`;
+ }
+ if(state==='ground'){
+  player.position.x+=jx*0.4; player.position.z+=jy*0.4;
+  camera.position.lerp(new THREE.Vector3(player.position.x, player.position.y+5, player.position.z+10),0.1);
+  camera.lookAt(player.position);
+ }
+ renderer.render(scene,camera);
+}
+
+function createOceanPalace(){
+ // Build underwater palace like video
+ for(let i=0;i<20;i++){
+  let col=new THREE.Mesh(new THREE.CylinderGeometry(1.5,2,12,8), new THREE.MeshStandardMaterial({color:0x6a9ab0}));
+  col.position.set((Math.random()-0.5)*100,6,(Math.random()-0.5)*100); col.castShadow=true; scene.add(col);
+ }
+ let floor=new THREE.Mesh(new THREE.BoxGeometry(120,1,120), new THREE.MeshStandardMaterial({color:0x4a7a8a}));
+ floor.position.set(0,0,0); scene.add(floor);
+}
 </script>
 </body>
-</html>
+ </html>
